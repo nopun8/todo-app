@@ -5,7 +5,7 @@ const todos = new Todos(BACKEND_URL);
 
 const list = document.querySelector("ul");
 const input = document.querySelector("input");
-const form = document.getElementById("taskForm"); // Reference to the form
+const form = document.getElementById("taskForm"); 
 
 input.disabled = true;
 
