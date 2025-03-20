@@ -1,4 +1,3 @@
-// js/class/Todos.js
 import { Task } from "./Task.js";
 
 class Todos {
