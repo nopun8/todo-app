@@ -1,12 +1,17 @@
-h3 {
-    margin: 1em 0; 
-    padding: 0 0; 
+body {
+    background: linear-gradient(135deg, #007bff, #6610f2);
 }
 
-form {
-    margin-bottom: 1em; 
+.todo-container {
+    background: #fff;
+    max-width: 400px;
+    width: 100%;
 }
 
 .list-group-item {
-    padding: 0.75em 1.25em;
+    transition: 0.3s ease-in-out;
+}
+
+.list-group-item:hover {
+    background: #f8f9fa;
 }

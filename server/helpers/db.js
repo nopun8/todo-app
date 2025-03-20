@@ -1,6 +1,6 @@
-require('dotenv').config();
 const { Pool } = require('pg');
 
+// Creating Pool
 const openDb = () => {
     const pool = new Pool({
         user: process.env.DB_USER,
@@ -24,6 +24,4 @@ const query = (sql, values = []) => {
     });
 };
 
-module.exports = {
-    query,
-};
+module.exports = { query };

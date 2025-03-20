@@ -23,7 +23,7 @@ class Todos {
 
     
 #removeFromArray = (id) => {
-    const arrayWithoutRemoved = this.#tasks.filter(task => task.getId() !== id);
+    const arrayWithoutRemoved = this.#tasks.filter(task => task.getTaskId() !== id);
     this.#tasks = arrayWithoutRemoved;
 };
 

@@ -7,11 +7,11 @@ class Task {
         this.#text = text;
     }
 
-    getId() {
+    getTaskId() {
         return this.#id;
     }
 
-    getText() {
+    getTaskText() {
         return this.#text;
     }
 }

@@ -1,67 +1,74 @@
 import { Todos } from "./class/Todos.js";
 
-const BACKEND_ROOT_URL = 'http://localhost:3001';
-const todos = new Todos(BACKEND_ROOT_URL);
+const BACKEND_URL = "http://localhost:3002";
+const todos = new Todos(BACKEND_URL);
 
-const list = document.querySelector('ul');
-const input = document.querySelector('input');
+const list = document.querySelector("ul");
+const input = document.querySelector("input");
+const form = document.getElementById("taskForm"); // Reference to the form
 
 input.disabled = true;
 
+// Function to add a new task
+const addNewTask = () => {
+    const taskText = input.value.trim();
+    if (taskText !== "") {
+        todos.addTask(taskText)
+            .then((task) => {
+                renderTask(task);
+                input.value = "";
+                input.focus();
+            })
+            .catch((error) => {
+                alert("Error adding task: " + error);
+            });
+    }
+};
+
+// Function to render a task
 const renderTask = (task) => {
-    const li = document.createElement('li');
-    li.setAttribute('class', 'list-group-item');
-    li.setAttribute('data-key', task.getId().toString());
-    renderSpan(li, task.getText());
-    renderLink(li, task.getId());
+    const li = document.createElement("li");
+    li.setAttribute("class", "list-group-item d-flex justify-content-between align-items-center");
+    li.setAttribute("data-key", task.getTaskId().toString());
+
+    const span = document.createElement("span");
+    span.innerText = task.getTaskText();
+    li.appendChild(span);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "btn btn-danger btn-sm";
+    deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+    deleteBtn.addEventListener("click", () => removeTask(task.getTaskId()));
+
+    li.appendChild(deleteBtn);
     list.appendChild(li);
 };
 
-const renderSpan = (li, text) => {
-    const span = li.appendChild(document.createElement('span'));
-    span.innerHTML = text;
+// Function to delete a task
+const removeTask = (id) => {
+    todos.removeTask(id)
+        .then((removedId) => {
+            const li = document.querySelector(`[data-key='${removedId}']`);
+            if (li) list.removeChild(li);
+        })
+        .catch((error) => alert("Error deleting task: " + error));
 };
 
-const renderLink = (li, id) => {
-    const a = li.appendChild(document.createElement('a'));
-    a.innerHTML = '<i class="bi bi-trash"></i>';
-    a.setAttribute('style', 'float: right');
-    a.addEventListener('click', (event) => {
-        event.preventDefault();
-        todos.removeTask(id).then((removed_id) => {
-            const li_to_remove = document.querySelector(`[data-key='${removed_id}']`);
-            if (li_to_remove) {
-                list.removeChild(li_to_remove);
-            }
-        }).catch((error) => {
-            alert(error);
-        });
-    });
+// Fetch tasks from backend
+const getTaskList = () => {
+    todos.getTasks()
+        .then((tasks) => {
+            tasks.forEach(renderTask);
+            input.disabled = false;
+        })
+        .catch((error) => alert("Error fetching tasks: " + error));
 };
 
-const getTasks = () => {
-    todos.getTasks().then((tasks) => {
-        tasks.forEach(task => {
-            renderTask(task);
-        });
-        input.disabled = false;
-    }).catch((error) => {
-        alert(error);
-    });
-};
-
-input.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        const task = input.value.trim();
-        if (task !== '') {
-            todos.addTask(task).then((task) => {
-                renderTask(task);
-                input.value = '';
-                input.focus();
-            });
-        }
-    }
+// Attach event listener to the form
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    addNewTask();
 });
 
-getTasks();
+// Load tasks on page load
+getTaskList();
